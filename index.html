@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insight-Notes by TaroY</title>
+    <script src="https://cdn.tailwindcss.com/3.4.3"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans SC', sans-serif; }
+        .note-link:hover .arrow { transform: translateX(4px); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-gray-900">Insight-Notes</h1>
+            <p class="mt-4 text-xl text-gray-600">Record some interesting things. by TaroY</p>
+        </header>
+
+        <main>
+            <section id="ai-news">
+                <h2 class="text-3xl font-semibold border-b-2 border-blue-500 pb-2 mb-6">
+                    🤖 AI 市场洞察 (AI News)
+                </h2>
+                <div id="notes-list" class="space-y-4">
+                    <p id="loading-message" class="text-gray-500">正在从仓库加载笔记列表...</p>
+                </div>
+            </section>
+            
+            </main>
+    </div>
+
+    <script>
+        // --- SCRIPT TO AUTOMATICALLY FETCH NOTES ---
+
+        // Your GitHub repository details
+        const GITHUB_USER = 'tarobeany';
+        const GITHUB_REPO = 'Insight-Notes';
+        const NOTES_DIRECTORY = 'AI-News'; // The folder you want to list files from
+
+        // The container where the links will be placed
+        const notesListContainer = document.getElementById('notes-list');
+        const loadingMessage = document.getElementById('loading-message');
+
+        // Construct the GitHub API URL
+        const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${NOTES_DIRECTORY}`;
+
+        // Fetch the file list from GitHub API
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`网络请求错误: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(files => {
+                // Clear the loading message
+                loadingMessage.remove();
+
+                // Filter for .html files and sort them (optional, newest first based on name)
+                const htmlFiles = files
+                    .filter(file => file.name.endsWith('.html'))
+                    .sort((a, b) => b.name.localeCompare(a.name)); 
+
+                if (htmlFiles.length === 0) {
+                    notesListContainer.innerHTML = '<p class="text-gray-500">此分类下暂无笔记。</p>';
+                    return;
+                }
+
+                // Create a link for each HTML file
+                htmlFiles.forEach(file => {
+                    const fileName = file.name;
+                    // Clean up the file name to create a nice title
+                    const title = fileName.replace('.html', '').replace(/_/g, ' ').replace(/-/g, ' ');
+
+                    const noteElement = document.createElement('a');
+                    noteElement.href = file.html_url.replace('https://github.com', `https://${GITHUB_USER}.github.io`).replace('/blob/', '/');
+                    noteElement.className = 'note-link block bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:border-blue-500 border-transparent border-2 transition-all duration-300';
+                    
+                    noteElement.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-bold text-gray-800">${title}</h3>
+                            <span class="arrow text-blue-500 font-bold transition-transform duration-300">→</span>
+                        </div>
+                    `;
+                    
+                    notesListContainer.appendChild(noteElement);
+                });
+            })
+            .catch(error => {
+                // Display an error message if something goes wrong
+                loadingMessage.innerHTML = `<p class="text-red-500">加载失败: ${error.message}<br>请检查仓库名称或网络连接。</p>`;
+                console.error('Error fetching notes:', error);
+            });
+
+    </script>
+
+</body>
+</html>
