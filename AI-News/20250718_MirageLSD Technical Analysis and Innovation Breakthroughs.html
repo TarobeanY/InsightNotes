@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MirageLSD: 技术分析与创新突破</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable dark mode using a class on the <html> element
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-primary': 'hsl(210, 8%, 15%)', // Dark gray for text/elements in light mode
+                        'brand-secondary': 'hsl(210, 7%, 56%)', // Lighter gray for subtitles
+                        'brand-bg-light': 'hsl(0, 0%, 98%)', // Almost white background for light mode
+                        'brand-bg-dark': 'hsl(220, 18%, 8%)', // Near-black background for dark mode
+                        'brand-surface-light': 'hsl(0, 0%, 100%)', // White for cards in light mode
+                        'brand-surface-dark': 'hsl(220, 14%, 12%)', // Dark gray for cards in dark mode
+                        'brand-border-light': 'hsl(210, 10%, 90%)',
+                        'brand-border-dark': 'hsl(220, 10%, 20%)',
+                        'brand-accent': 'hsl(250, 80%, 60%)',
+                    },
+                    boxShadow: {
+                        'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+                        'subtle-dark': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
+                        'glow': '0 0 15px -3px rgba(120, 99, 234, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Using a more modern font stack */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Transition for color properties for smooth theme changes */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        .btn-group button {
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .lang-btn.active {
+            background-color: hsl(250, 80%, 60%);
+            color: white;
+        }
+        .lang-btn:not(.active):hover {
+            background-color: hsl(210, 10%, 95%);
+        }
+        .dark .lang-btn:not(.active):hover {
+            background-color: hsl(220, 10%, 25%);
+        }
+        .resource-link {
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg-light dark:bg-brand-bg-dark text-brand-primary dark:text-gray-200">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-brand-bg-light/80 dark:bg-brand-bg-dark/80 backdrop-blur-sm border-b border-brand-border-light dark:border-brand-border-dark">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo/Title -->
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-wand-magic-sparkles text-brand-accent text-2xl"></i>
+                    <span class="font-bold text-xl">MirageLSD</span>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex items-center space-x-4">
+                    <!-- Language Switcher -->
+                    <div id="language-switcher" class="btn-group flex items-center bg-gray-100 dark:bg-brand-surface-dark p-1 rounded-lg text-sm font-medium">
+                        <button data-lang="zh" class="lang-btn px-3 py-1 rounded-md">中</button>
+                        <button data-lang="en" class="lang-btn px-3 py-1 rounded-md">EN</button>
+                        <button data-lang="ja" class="lang-btn px-3 py-1 rounded-md">日</button>
+                    </div>
+                    <!-- Theme Switcher -->
+                    <button id="theme-toggle" class="h-9 w-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-brand-surface-dark hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <i class="fa-solid fa-sun block dark:hidden"></i>
+                        <i class="fa-solid fa-moon hidden dark:block"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        
+        <!-- Simplified Chinese Content -->
+        <div id="content-zh" class="lang-content space-y-20">
+            <!-- Hero Section -->
+            <section class="text-center">
+                <div class="text-sm font-semibold text-brand-accent mb-2">2025年7月17日发布</div>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-brand-primary dark:text-white">
+                    首个实时流扩散AI视频模型
+                </h1>
+                <p class="mt-4 max-w-3xl mx-auto text-lg sm:text-xl text-brand-secondary">
+                    MirageLSD是首个实现无限长、零延迟实时视频生成的系统，它将您的想象力注入任何实时视频流，让魔法变为现实。
+                </p>
+            </section>
+
+            <!-- Key Features Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-12">核心技术特点</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-bolt text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">实时性与零延迟</h3>
+                        <p class="text-brand-secondary text-sm">以24 FPS稳定运行，响应延迟低于40毫秒，实现真正的实时互动，远超传统视频生成模型。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-infinity text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">无限长度视频</h3>
+                        <p class="text-brand-secondary text-sm">通过历史增强技术解决误差累积问题，可生成无限时长的视频流而无质量衰减。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-layer-group text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">时间一致性</h3>
+                        <p class="text-brand-secondary text-sm">采用因果自回归结构，确保视频内容在时间维度上高度连贯和稳定。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-microchip text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">超高效计算</h3>
+                        <p class="text-brand-secondary text-sm">借助CUDA Megakernels和模型剪枝等优化，实现超16倍响应速度提升，可在消费级GPU上流畅运行。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technical Deep Dive -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-12">技术深潜：攻克双重挑战</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Challenge 1: Infinite Generation -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-8 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <div class="flex items-center mb-4">
+                            <i class="fa-solid fa-infinity text-brand-accent text-2xl mr-4"></i>
+                            <h3 class="text-xl font-bold">挑战一：实现无限生成</h3>
+                        </div>
+                        <p class="text-brand-secondary mb-4">自回归模型中的每一帧都继承了上一帧的瑕疵。微小的误差会随时间累积，导致质量迅速下降，最终画面变得不连贯。这就是“误差累积”问题，它限制了以往模型的生成长度。</p>
+                        <div class="mt-6 p-4 bg-gray-50 dark:bg-brand-bg-dark rounded-lg">
+                            <h4 class="font-semibold text-green-600 dark:text-green-400"><i class="fa-solid fa-lightbulb mr-2"></i>我们的解决方案</h4>
+                            <ul class="mt-2 space-y-2 text-sm text-brand-secondary">
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-32">Diffusion Forcing:</strong><span class="flex-1">允许模型进行逐帧去噪，为独立生成每一帧提供了基础。</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-32">历史增强:</strong><span class="flex-1">在训练中引入损坏的历史帧，教会模型预测并纠正输入中的伪影，使其对误差漂移具有鲁棒性。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Challenge 2: Real-time Performance -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-8 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <div class="flex items-center mb-4">
+                            <i class="fa-solid fa-rocket text-brand-accent text-2xl mr-4"></i>
+                            <h3 class="text-xl font-bold">挑战二：达成实时性能</h3>
+                        </div>
+                        <p class="text-brand-secondary mb-4">为了不被人类视觉察觉，每一帧的生成必须在40毫秒内完成。高质量扩散模型计算量巨大，且现代GPU为高吞吐量而非低延迟设计，这给实时单样本推理带来了巨大挑战。</p>
+                        <div class="mt-6 p-4 bg-gray-50 dark:bg-brand-bg-dark rounded-lg">
+                            <h4 class="font-semibold text-green-600 dark:text-green-400"><i class="fa-solid fa-lightbulb mr-2"></i>我们的解决方案</h4>
+                             <ul class="mt-2 space-y-2 text-sm text-brand-secondary">
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-32">CUDA Mega Kernels:</strong><span class="flex-1">为NVIDIA Hopper架构定制内核，最大限度减少开销，最大化吞吐量。</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-32">架构感知剪枝:</strong><span class="flex-1">根据GPU硬件特性调整模型架构，并利用稀疏性支持减少计算量。</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-32">快捷蒸馏:</strong><span class="flex-1">训练小模型模仿大模型的去噪轨迹，大幅减少每帧所需的推理步骤。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comparison Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-10">对比：MirageLSD vs. 传统实时滤镜</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- MirageLSD Column -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <h3 class="text-xl font-bold mb-4 text-brand-accent">MirageLSD</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>技术原理:</strong> 基于生成式AI的扩散模型，对整个场景进行深度内容重构。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>灵活性:</strong> 用户通过文本提示自由定义视觉风格，生成全新内容，不受模板限制。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>应用场景:</strong> 互动直播、游戏、虚拟制片、博物馆展览等复杂创意领域。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>生成能力:</strong> 可生成无限长度视频，并能将现实物体实时转化为虚构内容。</div></li>
+                        </ul>
+                    </div>
+                    <!-- TikTok Filter Column -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <h3 class="text-xl font-bold mb-4 text-brand-secondary">抖音/TikTok 实时滤镜</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>技术原理:</strong> 传统计算机视觉，如人脸检测和图像纹理映射。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>灵活性:</strong> 效果局限于预设模板（美颜、贴纸），用户无法自由创作。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>应用场景:</strong> 主要用于社交娱乐，如美颜自拍、搞笑短视频。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>生成能力:</strong> 仅处理人脸或应用简单叠加效果，无法重构整个场景。</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Future Work -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-10">未来工作与开放挑战</h2>
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-memory text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">长时记忆</h3>
+                        <p class="text-brand-secondary text-sm">整合长时记忆机制以改善超长序列中的连贯性，如角色身份和场景布局的一致性。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-sliders text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">精确控制</h3>
+                        <p class="text-brand-secondary text-sm">集成关键点、场景注释等结构化控制信号，实现对特定对象、区域或动作的精细化编辑。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-cubes-stacked text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">语义一致性</h3>
+                        <p class="text-brand-secondary text-sm">在极端风格转换下，增强内容保留机制，防止物体结构或布局失真。</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="mb-16"></div>
+        </div>
+
+        <!-- English Content -->
+        <div id="content-en" class="lang-content space-y-20 hidden">
+            <!-- Hero Section -->
+            <section class="text-center">
+                <div class="text-sm font-semibold text-brand-accent mb-2">RELEASED JULY 17, 2025</div>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-brand-primary dark:text-white">
+                    The First Live-Stream Diffusion AI Video Model
+                </h1>
+                <p class="mt-4 max-w-3xl mx-auto text-lg sm:text-xl text-brand-secondary">
+                    MirageLSD is the first system to achieve infinite, real-time video generation with zero latency, inserting your imagination into any live video feed—making magic yourself.
+                </p>
+            </section>
+
+            <!-- Key Features Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-12">Core Technical Features</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-bolt text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">Real-time & Zero Latency</h3>
+                        <p class="text-brand-secondary text-sm">Operates at a stable 24 FPS with under 40ms response time, enabling true real-time interaction.</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-infinity text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">Infinite-Length Video</h3>
+                        <p class="text-brand-secondary text-sm">Solves error accumulation with History Augmentation, allowing for infinite video stream generation without quality degradation.</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-layer-group text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">Temporal Coherence</h3>
+                        <p class="text-brand-secondary text-sm">Employs a causal auto-regressive structure to ensure video content is highly consistent and stable over time.</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-microchip text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">Hyper-Efficient Computing</h3>
+                        <p class="text-brand-secondary text-sm">Achieves a 16x improvement in responsiveness via CUDA Megakernels, model pruning, and other optimizations.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technical Deep Dive -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-12">Technical Deep Dive: The Twin Challenges</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Challenge 1: Infinite Generation -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-8 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <div class="flex items-center mb-4">
+                            <i class="fa-solid fa-infinity text-brand-accent text-2xl mr-4"></i>
+                            <h3 class="text-xl font-bold">Challenge 1: Achieving Infinite Generation</h3>
+                        </div>
+                        <p class="text-brand-secondary mb-4">In auto-regressive models, each frame inherits imperfections from the last. Small errors compound, leading to rapid quality loss until the frames are incoherent. This is "error accumulation," the key limiter of previous models.</p>
+                        <div class="mt-6 p-4 bg-gray-50 dark:bg-brand-bg-dark rounded-lg">
+                            <h4 class="font-semibold text-green-600 dark:text-green-400"><i class="fa-solid fa-lightbulb mr-2"></i>Our Solution</h4>
+                            <ul class="mt-2 space-y-2 text-sm text-brand-secondary">
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">Diffusion Forcing:</strong><span class="flex-1">Allows the model to perform per-frame denoising, which is foundational for frame-by-frame generation.</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">History Augmentation:</strong><span class="flex-1">Fine-tuning on corrupted history frames teaches the model to anticipate and correct for artifacts, making it robust to drift.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Challenge 2: Real-time Performance -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-8 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <div class="flex items-center mb-4">
+                            <i class="fa-solid fa-rocket text-brand-accent text-2xl mr-4"></i>
+                            <h3 class="text-xl font-bold">Challenge 2: Achieving Real-Time Speed</h3>
+                        </div>
+                        <p class="text-brand-secondary mb-4">To be imperceptible, each frame must be generated in under 40ms. This is at odds with computationally intensive diffusion models and GPU architectures optimized for throughput, not low-latency single-sample inference.</p>
+                        <div class="mt-6 p-4 bg-gray-50 dark:bg-brand-bg-dark rounded-lg">
+                            <h4 class="font-semibold text-green-600 dark:text-green-400"><i class="fa-solid fa-lightbulb mr-2"></i>Our Solution</h4>
+                             <ul class="mt-2 space-y-2 text-sm text-brand-secondary">
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">CUDA Mega Kernels:</strong><span class="flex-1">Custom kernels for NVIDIA Hopper architecture minimize overhead and maximize throughput.</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">Architecture-Aware Pruning:</strong><span class="flex-1">Adapts the model architecture to the underlying GPU hardware and exploits sparsity to reduce FLOPs.</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">Shortcut Distillation:</strong><span class="flex-1">Trains smaller models to match the denoising trajectory of larger ones, drastically cutting inference steps per frame.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comparison Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-10">Comparison: MirageLSD vs. Traditional Real-time Filters</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- MirageLSD Column -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <h3 class="text-xl font-bold mb-4 text-brand-accent">MirageLSD</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>Core Technology:</strong> Generative AI diffusion model for deep, full-scene content reconstruction.</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>Flexibility:</strong> Users freely define visual styles via text prompts, generating novel content beyond templates.</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>Use Cases:</strong> Interactive live streams, gaming, virtual production, museum exhibits, and other complex creative fields.</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>Generative Power:</strong> Creates infinite-length video and can transform real-world objects into fictional content in real-time.</div></li>
+                        </ul>
+                    </div>
+                    <!-- TikTok Filter Column -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <h3 class="text-xl font-bold mb-4 text-brand-secondary">TikTok/Social Media Filters</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>Core Technology:</strong> Traditional computer vision, like face detection and image texture mapping.</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>Flexibility:</strong> Limited to preset templates (e.g., beauty filters, stickers); no user-defined creation.</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>Use Cases:</strong> Primarily for social entertainment, such as selfies and short, humorous videos.</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>Generative Power:</strong> Only processes faces or applies simple overlays; cannot reconstruct the entire scene.</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Future Work -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-10">Future Work & Open Challenges</h2>
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-memory text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">Long-Term Memory</h3>
+                        <p class="text-brand-secondary text-sm">Incorporate a longer-term memory mechanism to improve coherence over extended sequences (e.g., character identity, scene layout).</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-sliders text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">Precise Control</h3>
+                        <p class="text-brand-secondary text-sm">Integrate structured control signals (keypoints, annotations) to enable finer-grained, user-directed edits of objects or motion.</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-cubes-stacked text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">Semantic Consistency</h3>
+                        <p class="text-brand-secondary text-sm">Address distortions of object structure or layout under extreme style shifts by strengthening content preservation mechanisms.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="mb-16"></div>
+        </div>
+
+        <!-- Japanese Content -->
+        <div id="content-ja" class="lang-content space-y-20 hidden">
+            <!-- Hero Section -->
+            <section class="text-center">
+                <div class="text-sm font-semibold text-brand-accent mb-2">2025年7月17日リリース</div>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-brand-primary dark:text-white">
+                    初のライブストリーム拡散AIビデオモデル
+                </h1>
+                <p class="mt-4 max-w-3xl mx-auto text-lg sm:text-xl text-brand-secondary">
+                    MirageLSDは、無限長・ゼロ遅延のリアルタイムビデオ生成を初めて実現したシステムです。あらゆるライブ映像にあなたの想像力を挿入し、魔法を現実にします。
+                </p>
+            </section>
+
+            <!-- Key Features Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-12">主要な技術的特徴</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                     <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-bolt text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">リアルタイム性とゼロ遅延</h3>
+                        <p class="text-brand-secondary text-sm">24 FPSで安定動作し、応答遅延は40ms未満。真のリアルタイム対話を実現します。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-infinity text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">無限長の動画生成</h3>
+                        <p class="text-brand-secondary text-sm">履歴拡張技術により誤差累積問題を解決し、品質を損なうことなく無限のビデオストリームを生成可能。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-layer-group text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">時間的一貫性</h3>
+                        <p class="text-brand-secondary text-sm">因果的自己回帰構造を採用し、時間的に一貫性のある安定したビデオコンテンツを保証。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark shadow-subtle dark:shadow-subtle-dark">
+                        <i class="fa-solid fa-microchip text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">超高効率な計算</h3>
+                        <p class="text-brand-secondary text-sm">CUDA Megakernelsやモデル枝刈り等の最適化により、応答性を16倍以上向上させました。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technical Deep Dive -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-12">技術的深掘り：二つの挑戦の克服</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Challenge 1: Infinite Generation -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-8 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <div class="flex items-center mb-4">
+                            <i class="fa-solid fa-infinity text-brand-accent text-2xl mr-4"></i>
+                            <h3 class="text-xl font-bold">挑戦1：無限生成の実現</h3>
+                        </div>
+                        <p class="text-brand-secondary mb-4">自己回帰モデルでは、各フレームが前のフレームの欠陥を継承します。小さな誤差が時間とともに蓄積し、品質が急速に低下して最終的に映像が破綻します。これが「誤差累積」問題です。</p>
+                        <div class="mt-6 p-4 bg-gray-50 dark:bg-brand-bg-dark rounded-lg">
+                            <h4 class="font-semibold text-green-600 dark:text-green-400"><i class="fa-solid fa-lightbulb mr-2"></i>私たちの解決策</h4>
+                            <ul class="mt-2 space-y-2 text-sm text-brand-secondary">
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">Diffusion Forcing:</strong><span class="flex-1">モデルがフレーム毎のノイズ除去を行えるようにし、独立したフレーム生成の基盤を築きます。</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">履歴拡張:</strong><span class="flex-1">破損した履歴フレームでファインチューニングし、モデルが誤差を予測・修正できるように訓練し、ドリフトに対する堅牢性を高めます。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Challenge 2: Real-time Performance -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-8 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <div class="flex items-center mb-4">
+                            <i class="fa-solid fa-rocket text-brand-accent text-2xl mr-4"></i>
+                            <h3 class="text-xl font-bold">挑戦2：リアルタイム性能の達成</h3>
+                        </div>
+                        <p class="text-brand-secondary mb-4">人間の目に知覚されないためには、各フレームを40ms未満で生成する必要があります。これは計算量の多い拡散モデルや、低遅延より高スループットに最適化されたGPUアーキテクチャとは相反する要求です。</p>
+                        <div class="mt-6 p-4 bg-gray-50 dark:bg-brand-bg-dark rounded-lg">
+                            <h4 class="font-semibold text-green-600 dark:text-green-400"><i class="fa-solid fa-lightbulb mr-2"></i>私たちの解決策</h4>
+                             <ul class="mt-2 space-y-2 text-sm text-brand-secondary">
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">CUDA Mega Kernels:</strong><span class="flex-1">NVIDIA Hopperアーキテクチャ用のカスタムカーネルで、オーバーヘッドを最小化し、スループットを最大化します。</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">アーキテクチャ対応枝刈り:</strong><span class="flex-1">GPUハードウェアに合わせてモデルを調整し、スパース性を活用して計算量を削減します。</span></li>
+                                <li class="flex items-start"><strong class="text-brand-primary dark:text-gray-300 mr-2 w-36">ショートカット蒸留:</strong><span class="flex-1">小規模モデルを訓練して大規模モデルの軌跡を模倣させ、フレーム毎の推論ステップを大幅に削減します。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comparison Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-10">比較：MirageLSD vs. 従来のリアルタイムフィルター</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- MirageLSD Column -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <h3 class="text-xl font-bold mb-4 text-brand-accent">MirageLSD</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>技術原理:</strong> 生成AIの拡散モデルに基づき、シーン全体を深く再構築。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>柔軟性:</strong> テキストプロンプトで視覚スタイルを自由に定義し、テンプレートに縛られない新しいコンテンツを生成。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>応用シーン:</strong> インタラクティブなライブ配信、ゲーム、バーチャルプロダクション、博物館展示など、複雑で創造的な分野。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i><div><strong>生成能力:</strong> 無限長の動画を生成し、現実の物体を架空のコンテンツにリアルタイムで変換可能。</div></li>
+                        </ul>
+                    </div>
+                    <!-- TikTok Filter Column -->
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <h3 class="text-xl font-bold mb-4 text-brand-secondary">TikTok/SNS リアルタイムフィルター</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>技術原理:</strong> 顔検出や画像テクスチャマッピングなど、従来のコンピュータビジョン。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>柔軟性:</strong> プリセットされたテンプレート（美顔、スタンプ等）に限定され、ユーザーは自由に創作できない。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>応用シーン:</strong> 主に自撮りや面白い短編動画など、ソーシャルエンターテイメント向け。</div></li>
+                            <li class="flex items-start"><i class="fa-solid fa-times-circle text-red-500 mt-1 mr-3"></i><div><strong>生成能力:</strong> 顔の処理や単純なオーバーレイ効果のみで、シーン全体は再構築できない。</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Future Work -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-10">今後の課題と挑戦</h2>
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-memory text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">長期記憶</h3>
+                        <p class="text-brand-secondary text-sm">長期記憶メカニズムを導入し、キャラクターのアイデンティティやシーンレイアウトなど、長時間の連続性における一貫性を向上させる。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-sliders text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">精密な制御</h3>
+                        <p class="text-brand-secondary text-sm">キーポイントやシーン注釈などの構造化された制御信号を統合し、特定のオブジェクトや動きのより細かい編集を可能にする。</p>
+                    </div>
+                    <div class="bg-brand-surface-light dark:bg-brand-surface-dark p-6 rounded-xl border border-brand-border-light dark:border-brand-border-dark">
+                        <i class="fa-solid fa-cubes-stacked text-brand-accent text-3xl mb-4"></i>
+                        <h3 class="font-bold text-lg mb-2">意味的一貫性</h3>
+                        <p class="text-brand-secondary text-sm">極端なスタイル変換下でのオブジェクト構造の歪みを防ぐため、コンテンツ保持メカニズムを強化する。</p>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="mb-16"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-surface-light dark:bg-brand-surface-dark border-t border-brand-border-light dark:border-brand-border-dark">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="text-center md:text-left">
+                    <p class="font-semibold">Taro YU</p>
+                    <p class="text-sm text-brand-secondary">&copy; 2025. This page is for informational summary and does not represent the original author.</p>
+                </div>
+                <div class="flex items-center space-x-5 text-xl text-brand-secondary">
+                    <a href="https://x.com/Taro23333333" target="_blank" rel="noopener noreferrer" class="hover:text-brand-accent"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="https://tarobeany.github.io/InsightNotes/" target="_blank" rel="noopener noreferrer" class="hover:text-brand-accent"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://engage.cloud.microsoft/main/users/eyJfdHlwZSI6IlVzZXIiLCJpZCI6IjE2Mzk3MzMzNTYifQ" target="_blank" rel="noopener noreferrer" class="hover:text-brand-accent"><i class="fa-solid fa-link"></i></a>
+                </div>
+            </div>
+            <div class="mt-6 pt-6 border-t border-brand-border-light dark:border-brand-border-dark text-center text-xs text-brand-secondary">
+                <p><strong>Source Information Note:</strong> This page summarizes content from a document regarding MirageLSD technology analysis and its innovative breakthroughs.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Interaction Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Elements ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const languageSwitcher = document.getElementById('language-switcher');
+            const langContents = document.querySelectorAll('.lang-content');
+            const langButtons = languageSwitcher.querySelectorAll('.lang-btn');
+            const htmlTag = document.documentElement;
+
+            // --- Theme Switcher Logic ---
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    htmlTag.classList.add('dark');
+                } else {
+                    htmlTag.classList.remove('dark');
+                }
+                localStorage.setItem('theme', theme);
+            };
+
+            const toggleTheme = () => {
+                const currentTheme = htmlTag.classList.contains('dark') ? 'light' : 'dark';
+                applyTheme(currentTheme);
+            };
+
+            // Initialize theme on load
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else if (prefersDark) {
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+
+            themeToggleBtn.addEventListener('click', toggleTheme);
+
+
+            // --- Language Switcher Logic ---
+            const applyLanguage = (lang) => {
+                // Hide all content blocks
+                langContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Show the selected one
+                const activeContent = document.getElementById(`content-${lang}`);
+                if (activeContent) {
+                    activeContent.classList.remove('hidden');
+                }
+
+                // Update button styles
+                langButtons.forEach(button => {
+                    if (button.dataset.lang === lang) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+
+                // Set HTML lang attribute for accessibility
+                htmlTag.setAttribute('lang', lang === 'zh' ? 'zh-CN' : lang);
+
+                // Save preference
+                localStorage.setItem('language', lang);
+            };
+
+            // Initialize language on load
+            const savedLanguage = localStorage.getItem('language') || 'zh'; // Default to Chinese
+            applyLanguage(savedLanguage);
+            
+            languageSwitcher.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('.lang-btn');
+                if (targetButton && targetButton.dataset.lang) {
+                    applyLanguage(targetButton.dataset.lang);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
