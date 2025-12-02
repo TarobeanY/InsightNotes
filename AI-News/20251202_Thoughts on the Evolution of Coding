@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Evolution of Coding | AI Era</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome (Updated to 6.5.1 to support X-Twitter icon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B0C0E', 
+                            card: '#16181C',
+                            border: '#2E3035',
+                            accent: '#5E6AD2',
+                            text: '#E8E8E8',
+                            muted: '#8A8F98',
+                            success: '#2E9F74',
+                            warning: '#D4A017',
+                            danger: '#E5484D'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .dark .glass-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(94, 106, 210, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .light-mode-bg {
+            background-color: #F3F4F6;
+            color: #1F2937;
+        }
+        
+        .light .glass-card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .light .glass-card:hover {
+            border-color: #5E6AD2;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #5E6AD2, #8B5CF6);
+        }
+
+        /* Hidden Class for Language Toggle */
+        .lang-hidden {
+            display: none !important;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Connecting Lines for Flowchart */
+        .flow-line::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            width: 20px;
+            height: 2px;
+            background: #2E3035;
+            z-index: 0;
+        }
+        @media (max-width: 768px) {
+            .flow-line::after {
+                top: 100%;
+                left: 50%;
+                right: auto;
+                width: 2px;
+                height: 20px;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-brand-text antialiased selection:bg-brand-accent selection:text-white min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 w-full border-b border-brand-border/50 bg-brand-dark/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-brand-accent to-purple-600 flex items-center justify-center text-white font-bold">
+                        <i class="fa-solid fa-code-branch"></i>
+                    </div>
+                    <span class="font-semibold tracking-tight text-lg dark:text-white text-gray-900">Coding<span class="text-brand-accent">Evolution</span></span>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex items-center gap-4">
+                    <!-- Language Switcher -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 text-sm font-medium text-brand-muted hover:text-brand-accent transition-colors">
+                            <i class="fa-solid fa-globe"></i>
+                            <span id="current-lang-label">CN</span>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-32 bg-brand-card border border-brand-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 overflow-hidden">
+                            <button onclick="switchLang('cn')" class="w-full text-left px-4 py-2 text-sm hover:bg-white/5 dark:text-gray-300">中文 (CN)</button>
+                            <button onclick="switchLang('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-white/5 dark:text-gray-300">English (EN)</button>
+                            <button onclick="switchLang('jp')" class="w-full text-left px-4 py-2 text-sm hover:bg-white/5 dark:text-gray-300">日本語 (JP)</button>
+                        </div>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()" class="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 transition-colors text-brand-muted hover:text-yellow-400">
+                        <i id="theme-icon" class="fa-solid fa-sun"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+
+        <!-- Hero Section -->
+        <section class="text-center max-w-4xl mx-auto animate-fade-in space-y-8">
+            <!-- Badge Removed as requested -->
+            
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight dark:text-white text-gray-900">
+                <span data-lang="cn">从解题到<span class="text-gradient">全栈创造</span></span>
+                <span data-lang="en" class="lang-hidden">From LeetCode to <span class="text-gradient">Creation</span></span>
+                <span data-lang="jp" class="lang-hidden">解法から<span class="text-gradient">創造</span>へ</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-brand-muted leading-relaxed max-w-2xl mx-auto">
+                <span data-lang="cn">
+                    AI 正在重塑“优秀工程师”的定义。我们正在见证从算法解题到 <strong>AI 辅助功能交付</strong> 的根本性转变。
+                </span>
+                <span data-lang="en" class="lang-hidden">
+                    AI is reshaping the definition of a "Great Engineer." We are witnessing a fundamental shift from algorithmic puzzles to <strong>AI-assisted feature delivery</strong>.
+                </span>
+                <span data-lang="jp" class="lang-hidden">
+                    AIは「優秀なエンジニア」の定義を作り変えています。アルゴリズムのパズルから<strong>AI支援による機能実装</strong>への根本的な変化を目の当たりにしています。
+                </span>
+            </p>
+
+            <!-- Productivity Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 pt-4 border-t border-brand-border/30 max-w-3xl mx-auto">
+                <div>
+                    <div class="text-3xl font-bold dark:text-white text-gray-900 font-mono">10x</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1" data-lang="cn">生产力倍增</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1 lang-hidden" data-lang="en">Velocity Multiplier</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1 lang-hidden" data-lang="jp">生産性倍増</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold dark:text-white text-gray-900 font-mono">1/3</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1" data-lang="cn">研发周期压缩</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1 lang-hidden" data-lang="en">Cycle Compression</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1 lang-hidden" data-lang="jp">開発サイクル短縮</div>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <div class="text-3xl font-bold text-brand-accent font-mono">New</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1" data-lang="cn">核心竞争力</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1 lang-hidden" data-lang="en">Core Competency</div>
+                    <div class="text-xs uppercase tracking-wider text-brand-muted mt-1 lang-hidden" data-lang="jp">競争力の源泉</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 1: The Gap (Efficiency Visualization) -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-slide-up">
+            <div class="glass-card rounded-2xl p-8 flex flex-col justify-center">
+                <div class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500 mb-6">
+                    <i class="fa-solid fa-arrow-trend-up text-xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-4 dark:text-white text-gray-900">
+                    <span data-lang="cn">能力差距指数级放大</span>
+                    <span data-lang="en" class="lang-hidden">The Variance Amplified</span>
+                    <span data-lang="jp" class="lang-hidden">能力格差の指数関数的拡大</span>
+                </h2>
+                <p class="text-brand-muted leading-relaxed">
+                    <span data-lang="cn">
+                        在 AI 辅助下，能力差距被放大为<strong>“交付完整产品”</strong>与<strong>“甚至无法跑通基本功能”</strong>的天壤之别。
+                    </span>
+                    <span data-lang="en" class="lang-hidden">
+                        With AI, the skill gap explodes into the difference between <strong>delivering a polished product</strong> and <strong>failing to run basic functions</strong>.
+                    </span>
+                    <span data-lang="jp" class="lang-hidden">
+                        AI支援下では、能力差は<strong>「洗練された製品の納品」</strong>と<strong>「基本機能すら動かない」</strong>という決定的な違いとなって現れます。
+                    </span>
+                </p>
+            </div>
+            
+            <div class="glass-card rounded-2xl p-8 bg-gradient-to-br from-white/5 to-transparent relative overflow-hidden flex items-center justify-center">
+                <!-- Abstract Chart -->
+                <div class="w-full space-y-4">
+                    <div class="flex justify-between text-xs text-brand-muted uppercase font-mono mb-2">
+                        <span>Output Quality</span>
+                        <span>Time</span>
+                    </div>
+                    <!-- High Performer -->
+                    <div class="relative h-12 w-full bg-brand-dark rounded-lg overflow-hidden border border-brand-border/50">
+                        <div class="absolute top-0 left-0 h-full bg-brand-success/20 w-[90%] flex items-center px-4">
+                            <span class="text-brand-success font-mono text-sm font-bold">AI Native Engineer</span>
+                        </div>
+                    </div>
+                    <!-- Low Performer -->
+                    <div class="relative h-12 w-full bg-brand-dark rounded-lg overflow-hidden border border-brand-border/50">
+                        <div class="absolute top-0 left-0 h-full bg-brand-danger/20 w-[20%] flex items-center px-4">
+                            <span class="text-brand-danger font-mono text-sm font-bold">Legacy Engineer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module: Vibe Coding & Skills (Grid) -->
+        <section>
+            <div class="flex items-center gap-2 mb-8 text-brand-muted uppercase text-xs font-bold tracking-widest">
+                <span class="w-8 h-[1px] bg-brand-border"></span>
+                <span data-lang="cn">新核心能力矩阵</span>
+                <span data-lang="en" class="lang-hidden">New Competency Matrix</span>
+                <span data-lang="jp" class="lang-hidden">新しい能力マトリックス</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Card 1: Vibe Coding (Communication) -->
+                <div class="glass-card rounded-xl p-6 group border-brand-accent/30 hover:border-brand-accent transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 rounded-full bg-brand-accent/10 text-brand-accent flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <span class="text-[10px] font-mono border border-brand-accent/30 text-brand-accent px-2 py-1 rounded">HOT SKILL</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 dark:text-white text-gray-900">Vibe Coding</h3>
+                    <p class="text-sm text-brand-muted leading-relaxed">
+                        <span data-lang="cn">一种基于直觉与策略的混合沟通能力。包括对 AI 的预期管理、模糊需求的精准转译，以及防止工程跑偏的“纠偏力”。</span>
+                        <span data-lang="en" class="lang-hidden">A hybrid skill of intuition and strategy. Includes expectation management, precise translation of vague requirements, and the ability to correct AI's course.</span>
+                        <span data-lang="jp" class="lang-hidden">直感と戦略に基づくハイブリッドなスキル。AIへの期待値管理、曖昧な要件の正確な翻訳、そしてエンジニアリングの軌道修正能力を含みます。</span>
+                    </p>
+                </div>
+
+                <!-- Card 2: Taste -->
+                <div class="glass-card rounded-xl p-6 group hover:border-purple-500/50">
+                    <div class="w-10 h-10 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 dark:text-white text-gray-900">
+                        <span data-lang="cn">工程品味</span>
+                        <span data-lang="en" class="lang-hidden">Engineering Taste</span>
+                        <span data-lang="jp" class="lang-hidden">エンジニアリング・センス</span>
+                    </h3>
+                    <p class="text-sm text-brand-muted leading-relaxed">
+                        <span data-lang="cn">当实现不再是瓶颈，审美成为新的上限。不仅仅是 UI 配色，更包括对交互流畅度（Fluidity）和布局合理性的敏锐直觉。</span>
+                        <span data-lang="en" class="lang-hidden">When implementation is commodity, taste becomes the ceiling. It's not just colors, but an intuition for interaction fluidity and logical layout.</span>
+                        <span data-lang="jp" class="lang-hidden">実装がコモディティ化すると、センスが上限を決めます。配色だけでなく、操作の流動性やレイアウトの論理性に対する鋭い直感です。</span>
+                    </p>
+                </div>
+
+                <!-- Card 3: New Technical Depth -->
+                <div class="glass-card rounded-xl p-6 group hover:border-emerald-500/50">
+                    <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 dark:text-white text-gray-900">
+                        <span data-lang="cn">系统编排力</span>
+                        <span data-lang="en" class="lang-hidden">System Orchestration</span>
+                        <span data-lang="jp" class="lang-hidden">システム編成力</span>
+                    </h3>
+                    <p class="text-sm text-brand-muted leading-relaxed">
+                        <span data-lang="cn">技术深度不再体现为手写红黑树，而体现为对 AI 生成内容的**预判**与**快速验证**。你需要成为系统的架构师，而非代码的搬运工。</span>
+                        <span data-lang="en" class="lang-hidden">Depth is no longer about writing Red-Black trees, but **predicting** and **verifying** AI output. Be the architect of the system, not the carrier of code.</span>
+                        <span data-lang="jp" class="lang-hidden">技術的深さは、赤黒木の手書きではなく、AI生成物の**予測**と**検証**に現れます。コードの運び屋ではなく、システムの建築家であれ。</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Module: The Predictive Verification Loop (Abstracted Methodology) -->
+        <section class="animate-slide-up">
+            <div class="glass-card rounded-2xl p-8 md:p-12 border border-brand-border">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl font-bold dark:text-white text-gray-900 mb-2">
+                        <span data-lang="cn">最佳实践模型：预测性验证循环</span>
+                        <span data-lang="en" class="lang-hidden">The Model: Predictive Verification Loop</span>
+                        <span data-lang="jp" class="lang-hidden">ベストプラクティス：予測的検証ループ</span>
+                    </h2>
+                    <p class="text-brand-muted text-sm max-w-2xl mx-auto">
+                        <span data-lang="cn">高效工程师处理复杂任务的标准工作流抽象。</span>
+                        <span data-lang="en" class="lang-hidden">The standard workflow abstraction for high-performing engineers.</span>
+                        <span data-lang="jp" class="lang-hidden">高パフォーマンスなエンジニアの標準的なワークフロー抽象化。</span>
+                    </p>
+                </div>
+
+                <!-- Process Flow -->
+                <div class="relative grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- Step 1 -->
+                    <div class="relative z-10 flex flex-col items-center text-center flow-line">
+                        <div class="w-16 h-16 rounded-full bg-brand-card border border-brand-accent/50 text-brand-accent flex items-center justify-center text-2xl mb-4 shadow-[0_0_20px_rgba(94,106,210,0.2)]">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h4 class="font-bold mb-2 dark:text-white text-gray-900">
+                            <span data-lang="cn">1. 意图预判</span>
+                            <span data-lang="en" class="lang-hidden">1. Intent & Prediction</span>
+                            <span data-lang="jp" class="lang-hidden">1. 意図と予測</span>
+                        </h4>
+                        <p class="text-xs text-brand-muted px-4">
+                            <span data-lang="cn">在 AI 动工前，先定义修改范围。告诉 AI 哪里需要改，防止它"自作聪明"。</span>
+                            <span data-lang="en" class="lang-hidden">Define scope before AI starts. Predict change locations to prevent hallucinations.</span>
+                            <span data-lang="jp" class="lang-hidden">AIが作業を始める前に範囲を定義する。ハルシネーションを防ぐため、変更箇所を予測する。</span>
+                        </p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative z-10 flex flex-col items-center text-center flow-line">
+                        <div class="w-16 h-16 rounded-full bg-brand-card border border-purple-500/50 text-purple-400 flex items-center justify-center text-2xl mb-4 animate-pulse-slow">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <h4 class="font-bold mb-2 dark:text-white text-gray-900">
+                            <span data-lang="cn">2. 机器执行</span>
+                            <span data-lang="en" class="lang-hidden">2. AI Execution</span>
+                            <span data-lang="jp" class="lang-hidden">2. AIによる実行</span>
+                        </h4>
+                        <p class="text-xs text-brand-muted px-4">
+                            <span data-lang="cn">AI 快速生成代码。人类此时转变为观察者，通过 Vibe Coding 维持上下文清晰。</span>
+                            <span data-lang="en" class="lang-hidden">AI generates rapidly. Human becomes observer, maintaining context via Vibe Coding.</span>
+                            <span data-lang="jp" class="lang-hidden">AIが高速で生成する。人間は観察者となり、Vibe Codingを通じてコンテキストを維持する。</span>
+                        </p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative z-10 flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-brand-card border border-emerald-500/50 text-emerald-400 flex items-center justify-center text-2xl mb-4">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        </div>
+                        <h4 class="font-bold mb-2 dark:text-white text-gray-900">
+                            <span data-lang="cn">3. 靶向验证</span>
+                            <span data-lang="en" class="lang-hidden">3. Targeted Verification</span>
+                            <span data-lang="jp" class="lang-hidden">3. ターゲット検証</span>
+                        </h4>
+                        <p class="text-xs text-brand-muted px-4">
+                            <span data-lang="cn">不仅仅是运行代码，而是打开对应文件，检查生成的逻辑是否符合第一步的预判。</span>
+                            <span data-lang="en" class="lang-hidden">Verify logic against predictions in specific files, not just running the output blindly.</span>
+                            <span data-lang="jp" class="lang-hidden">単に出力結果を実行するのではなく、特定のファイルで予測と照らし合わせてロジックを検証する。</span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 5: The Paradox (Full Width) -->
+        <section class="animate-slide-up">
+            <div class="glass-card rounded-2xl p-8 border-l-4 border-l-brand-accent">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-shrink-0">
+                        <i class="fa-solid fa-scale-balanced text-4xl text-brand-accent"></i>
+                    </div>
+                    <div class="space-y-4">
+                        <h2 class="text-2xl font-bold dark:text-white text-gray-900">
+                            <span data-lang="cn">AI 作弊的悖论</span>
+                            <span data-lang="en" class="lang-hidden">The Paradox of AI "Cheating"</span>
+                            <span data-lang="jp" class="lang-hidden">AI「カンニング」のパラドックス</span>
+                        </h2>
+                        <p class="text-brand-muted leading-relaxed">
+                            <span data-lang="cn">
+                                当“编码”的核心变成了考察你与 AI 协作的能力时，“作弊”的概念便不复存在。如果 AI 是你未来的副驾驶，那么使用它不仅不是作弊，反而是必须展示的核心技能。
+                            </span>
+                            <span data-lang="en" class="lang-hidden">
+                                When "coding" evolves into testing your ability to collaborate with AI, the concept of "cheating" dissolves. If AI is your future co-pilot, using it is not cheating—it is a demonstration of essential skills.
+                            </span>
+                            <span data-lang="jp" class="lang-hidden">
+                                「コーディング」の核心がAIとの協調能力を問うものになれば、「カンニング」という概念は消滅します。AIが未来の副操縦士であるなら、それを使うことは必須スキルの証明なのです。
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-brand-border/50 bg-brand-dark mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                
+                <!-- Author Info -->
+                <div class="space-y-2">
+                    <h3 class="text-lg font-bold dark:text-white text-gray-900">Taro YU</h3>
+                    <div class="flex gap-4">
+                        <a href="https://x.com/Taro23333333" target="_blank" class="text-brand-muted hover:text-white transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://tarobeany.github.io/InsightNotes/" target="_blank" class="text-brand-muted hover:text-white transition-colors"><i class="fa-brands fa-github"></i></a>
+                    </div>
+                    <p class="text-xs text-brand-muted pt-2">© 2025 All Rights Reserved.</p>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="text-xs text-brand-muted md:text-right max-w-md space-y-2 font-mono">
+                    <p>Source: A data-driven analysis on coding trends in the AI era.</p>
+                    <p class="opacity-60">Disclaimer: This summary is for informational purposes and does not necessarily represent the views of the original author.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Language Data
+        const langs = ['cn', 'en', 'jp'];
+
+        function switchLang(selectedLang) {
+            // Update UI content
+            langs.forEach(lang => {
+                const elements = document.querySelectorAll(`[data-lang="${lang}"]`);
+                elements.forEach(el => {
+                    if (lang === selectedLang) {
+                        el.classList.remove('lang-hidden');
+                        el.classList.add('animate-fade-in');
+                    } else {
+                        el.classList.add('lang-hidden');
+                        el.classList.remove('animate-fade-in');
+                    }
+                });
+            });
+
+            // Update button label
+            const labelMap = { 'cn': 'CN', 'en': 'EN', 'jp': 'JP' };
+            document.getElementById('current-lang-label').textContent = labelMap[selectedLang];
+
+            // Save preference
+            localStorage.setItem('preferred-lang', selectedLang);
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                document.body.classList.replace('bg-brand-dark', 'light-mode-bg');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                document.body.classList.replace('light-mode-bg', 'bg-brand-dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check Theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                toggleTheme(); // Switch to light since default is dark in HTML
+            }
+
+            // Check Language
+            const savedLang = localStorage.getItem('preferred-lang') || 'cn';
+            switchLang(savedLang);
+        });
+    </script>
+</body>
+</html>
